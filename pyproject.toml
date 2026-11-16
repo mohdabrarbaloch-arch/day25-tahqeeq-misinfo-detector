@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tahqeeq"
+version = "1.0.0"
+description = "Misinformation detection that shows its evidence instead of a number"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "ABraz Baloch" }]
+keywords = ["misinformation", "fact-check", "nlp", "fastapi", "explainable"]
+
+dependencies = [
+    "fastapi>=0.115,<1.0",
+    "uvicorn[standard]>=0.32,<1.0",
+    "sqlalchemy>=2.0,<3.0",
+    "pydantic>=2.9,<3.0",
+    "pydantic-settings>=2.6,<3.0",
+    "email-validator>=2.2,<3.0",
+    "PyJWT>=2.9,<3.0",
+    "bcrypt>=4.2,<5.0",
+    "httpx>=0.27,<1.0",
+    "beautifulsoup4>=4.12,<5.0",
+    "lxml>=5.3,<6.0",
+    "python-multipart>=0.0.12,<1.0",
+    # PostgreSQL driver, used by docker-compose. SQLite needs nothing extra.
+    "psycopg[binary]>=3.2,<4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3,<9.0",
+    "pytest-asyncio>=0.24,<1.0",
+    "ruff>=0.7,<1.0",
+    "playwright>=1.48,<2.0",
+]
+
+[project.scripts]
+tahqeeq = "app.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.setuptools.package-data]
+app = ["static/*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["app", "tests"]
+# Build artifacts and the virtualenv are not source. Without this, `ruff check .`
+# lints a stale copy of the code inside build/lib/ and reports phantom errors.
+extend-exclude = ["build", "dist", ".venv", "*.egg-info"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "C4", "RUF", "ARG", "PTH", "T20"]
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ARG", "S101"]
+"scripts/*" = ["T20", "ARG"]
+# The seed script is a CLI: printing to stdout is its entire user interface.
+"app/seed.py" = ["T20"]
+"app/__main__.py" = ["T20"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+filterwarnings = ["error::DeprecationWarning:app.*"]

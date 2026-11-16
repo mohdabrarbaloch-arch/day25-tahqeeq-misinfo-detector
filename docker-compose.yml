@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tahqeeq
+      POSTGRES_PASSWORD: tahqeeq
+      POSTGRES_DB: tahqeeq
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tahqeeq -d tahqeeq"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ENVIRONMENT: production
+      DATABASE_URL: postgresql+psycopg://tahqeeq:tahqeeq@db:5432/tahqeeq
+      # Set this in a .env file next to this compose file. The app refuses to
+      # start in production without it, which is the point.
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set — run: python -c "import secrets; print(secrets.token_urlsafe(48))"}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8000}
+      RATE_LIMIT_PER_MINUTE: ${RATE_LIMIT_PER_MINUTE:-60}
+      ANALYZE_RATE_LIMIT_PER_MINUTE: ${ANALYZE_RATE_LIMIT_PER_MINUTE:-20}
+    ports:
+      - "8000:8000"
+
+volumes:
+  pgdata:

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tahqeeq — check what you're reading</title>
+<meta name="description" content="Paste an article or a WhatsApp forward. Tahqeeq scores it and shows you exactly which words cost it points." />
+<link rel="stylesheet" href="/static/app.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">ت</span>
+      <span class="brand-text">
+        <strong>Tahqeeq</strong>
+        <small>تحقیق</small>
+      </span>
+    </a>
+    <nav class="topnav" id="topnav">
+      <button class="btn btn-ghost" data-view="check" type="button">Check</button>
+      <button class="btn btn-ghost" data-view="history" type="button">History</button>
+      <button class="btn btn-ghost" id="signout" type="button" hidden>Sign out</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ AUTH ============ -->
+  <section id="view-auth" class="view">
+    <div class="hero">
+      <h1>Not everything that reads like news <em>is</em> news.</h1>
+      <p class="lede">
+        Paste an article, a press release, or the forward your uncle sent at 2am.
+        Tahqeeq reads the writing — the sourcing, the certainty, the share pressure —
+        and shows you every reason behind the score. No black box, no "87% fake".
+      </p>
+    </div>
+
+    <div class="auth-grid">
+      <form class="card" id="form-login">
+        <h2>Sign in</h2>
+        <label>Email <input type="email" name="email" required autocomplete="email" placeholder="you@example.com" /></label>
+        <label>Password <input type="password" name="password" required autocomplete="current-password" placeholder="••••••••••" /></label>
+        <button class="btn btn-primary" type="submit">Sign in</button>
+        <p class="form-error" data-error hidden></p>
+      </form>
+
+      <form class="card" id="form-register">
+        <h2>Create an account</h2>
+        <label>Name <input type="text" name="display_name" maxlength="80" autocomplete="name" placeholder="Your name" /></label>
+        <label>Email <input type="email" name="email" required autocomplete="email" placeholder="you@example.com" /></label>
+        <label>Password <input type="password" name="password" required minlength="10" autocomplete="new-password" placeholder="At least 10 characters" /></label>
+        <button class="btn btn-primary" type="submit">Create account</button>
+        <p class="form-error" data-error hidden></p>
+      </form>
+    </div>
+
+    <p class="demo-hint">
+      Just want to look around? <button class="linkbtn" id="demo-login" type="button">Use the demo account</button>
+    </p>
+  </section>
+
+  <!-- ============ CHECK ============ -->
+  <section id="view-check" class="view" hidden>
+    <div class="check-head">
+      <h1>What are you reading?</h1>
+      <p class="lede">Paste the text, or give us a link and we'll pull the article out of it.</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab is-active" data-tab="paste" role="tab" type="button">Paste text</button>
+      <button class="tab" data-tab="link" role="tab" type="button">From a link</button>
+    </div>
+
+    <form id="form-analyze" class="card check-card">
+      <div data-pane="paste">
+        <label class="sr-only" for="headline">Headline</label>
+        <input id="headline" name="headline" type="text" maxlength="500" placeholder="Headline (optional — we'll use the first line if you leave it blank)" />
+
+        <label class="sr-only" for="text">Article text</label>
+        <textarea id="text" name="text" rows="12" maxlength="60000" placeholder="Paste the article, the message, or the forward here…"></textarea>
+
+        <div class="counter"><span id="wordcount">0 words</span><span id="charcount">0 characters</span></div>
+      </div>
+
+      <div data-pane="link" hidden>
+        <label class="sr-only" for="url">Article URL</label>
+        <input id="url" name="url" type="url" maxlength="2048" placeholder="https://example.com/article" />
+        <p class="hint">We fetch the page, pull out the article text, and score that. Paywalled and JavaScript-only pages usually fail — paste the text instead.</p>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" type="submit" id="submit-analyze">Check it</button>
+        <button class="btn btn-ghost" type="button" id="load-sample">Try a sample</button>
+      </div>
+      <p class="form-error" data-error hidden></p>
+    </form>
+
+    <div id="result" hidden></div>
+  </section>
+
+  <!-- ============ HISTORY ============ -->
+  <section id="view-history" class="view" hidden>
+    <div class="check-head">
+      <h1>Everything you've checked</h1>
+      <p class="lede">Each entry keeps the report exactly as it was scored, so the evidence never changes under you.</p>
+    </div>
+    <div class="stat-row" id="stat-row"></div>
+    <div id="history-list" class="history-list"></div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p>
+      <strong>Tahqeeq</strong> reads style and sourcing, not facts. A high score means
+      nothing suspicious was found in the writing — it is not a guarantee that the
+      claims are true. Always check the primary source.
+    </p>
+  </div>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
