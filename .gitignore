@@ -40,5 +40,6 @@ coverage.xml
 *.swp
 .DS_Store
 
-# --- screenshots (regenerated, not source) ---------------------------------
-/screenshots/*.png
+# --- screenshots -----------------------------------------------------------
+# These ARE committed: the README links to them and they are real captures of
+# the running app. Regenerate with scripts/capture_screenshots.py.
